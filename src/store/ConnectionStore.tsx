@@ -21,6 +21,7 @@ type IJitsiEvents = {
     CONFERENCE_JOINED
     TRACK_MUTE_CHANGED
     CONFERENCE_ERROR
+    MESSAGE_RECEIVED
   }
   connection: {
     CONNECTION_ESTABLISHED
@@ -53,6 +54,7 @@ type IJitsiConnection = {
   ) => IJitsiConference
   connect: () => void
   disconnect: () => void
+  addEventListener:(e)=>void
   xmpp:any
 }
 

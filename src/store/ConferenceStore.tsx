@@ -39,8 +39,10 @@ type ID = string
 
 export type IJitsiConference={
   on: (eventType:string,callback:(...rest)=>void) => boolean
+  off: (eventType:string,callback:(...rest)=>void) => boolean
   addCommandListener: (command:string,callback:(e:any)=>void) => boolean
   sendCommand: (command:string,payload:any) => boolean
+  sendTextMessage: (text:string)=>void
   join:()=>void
   setDisplayName:(name:string)=>void
   addTrack:(track:ITrack)=>Promise<any>
@@ -175,6 +177,7 @@ export const useConferenceStore = create<ConferenceStore>((set,get) => {
       // r.on(JitsiMeetJS.events.conference.PARTICIPANT_PROPERTY_CHANGED, (e) => console.log("Property Changed ", e))
       window.addEventListener('beforeunload', leave) //does this help?  
       window.addEventListener('unload', leave) //does this help?
+
       conference.join()
       set({conferenceObject:conference,error:undefined})
     } else {
