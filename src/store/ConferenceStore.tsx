@@ -58,6 +58,7 @@ type ConferenceStore = {
   users: Users
   displayName:string
   error:any
+  messages:Array<{id:string, text:string, nr:number}>
 } & ConferenceActions & UserActions
 
 type ConferenceActions = {
@@ -84,6 +85,7 @@ export const useConferenceStore = create<ConferenceStore>((set,get) => {
     users:{},
     displayName:"Friendly Sphere",
     error:undefined,
+    messages:[]
   }
 
   const produceAndSet = (callback:(newState:ConferenceStore)=>void)=>set(state => produce(state, newState => callback(newState)))
@@ -151,7 +153,11 @@ export const useConferenceStore = create<ConferenceStore>((set,get) => {
     set({isJoined:true})//only Local User -> could be in LocalStore
     const conference = get().conferenceObject
     conference?.setDisplayName(get().displayName)
-  } 
+  }
+
+  const _onMessageReceived = (id:string, text:string, nr:number) => {
+    set((store) => ({messages: [...store.messages, {id:id, text:text, nr:nr}]}))
+  }
 
   // # Public functions *******************************************
   const init = (conferenceID:string):void => {
@@ -170,6 +176,7 @@ export const useConferenceStore = create<ConferenceStore>((set,get) => {
       conference.on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, _onConferenceJoined)
       conference.on(JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED, _onTrackMuteChanged);
       conference.on(JitsiMeetJS.events.conference.CONFERENCE_ERROR, _onConferenceError);
+      conference.on(JitsiMeetJS.events.conference.MESSAGE_RECEIVED, _onMessageReceived);
       //conference.on(JitsiMeetJS.events.conference.DISPLAY_NAME_CHANGED, onUserNameChanged);
       // conference.on(JitsiMeetJS.events.conference.TRACK_AUDIO_LEVEL_CHANGED, on_remote_track_audio_level_changed);
       //conference.on(JitsiMeetJS.events.conference.PHONE_NUMBER_CHANGED, onPhoneNumberChanged);

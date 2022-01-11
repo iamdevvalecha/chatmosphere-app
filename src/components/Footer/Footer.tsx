@@ -34,7 +34,7 @@ export const Footer: React.FC = ({ children }) => {
  
   return (
     <Container>
-      <LeftBox>Prototype Fund</LeftBox>
+      <LeftBox></LeftBox>
       <CenterBox>
        {children}
       </CenterBox>
